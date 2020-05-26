@@ -726,6 +726,7 @@
                 "environment model file": "environment_model.c",
                 "additional headers": [
                   "linux/user_namespace.h",
+<<<<<<< Updated upstream
                   "ldv/linux/common.h",
                   "ldv/linux/err.h",
                   "ldv/verifier/common.h",
@@ -733,13 +734,23 @@
                   "ldv/verifier/nondet.h",
                   "ldv/verifier/memory.h",
                   "ldv/verifier/thread.h"
+=======
+                  "linux/ldv/common.h",
+                  "linux/ldv/err.h",
+                  "linux/ldv/list.h",
+                  "verifier/common.h",
+                  "verifier/gcc.h",
+                  "verifier/nondet.h",
+                  "verifier/memory.h",
+                  "verifier/thread.h"
+>>>>>>> Stashed changes
                 ]
               }
             }
           },
           {
             "name": "RSG",
-            "options": {"models": ["linux/memory safety/memory.c"]}
+            "options": {"models": ["linux/memory safety/memory.c", "linux/lists/list.c"]}
           },
           {
             "name": "FVTP",

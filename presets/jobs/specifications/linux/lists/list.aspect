@@ -1,0 +1,53 @@
+before: file("$this")
+{
+	#include <linux/ldv/list.h>
+  	#include <linux/types.h>
+}
+
+//Functions for lists:
+
+around: call(static inline void __list_add(..))
+{
+	ldv__list_add($arg1, $arg2, $arg3);
+}
+
+around: call(static inline void __list_del(..))
+{
+	ldv__list_del($arg1, $arg2);
+}
+
+around: call(static inline void list_del(..))
+{
+	ldv__list_del_entry($arg1);
+	$arg1->next = (void *) 0;
+ 	$arg1->prev = (void *) 0;
+}
+
+around: call(static inline void __list_del_entry(..))
+{
+	ldv__list_del_entry($arg1);
+}
+
+
+around: call(static inline void INIT_LIST_HEAD(..))
+{
+	$arg1->prev = $arg1;
+}
+
+around: call(static inline int list_empty(..))
+{
+  return $arg1->next == $arg1;
+}
+
+//Macro:
+around: define(WRITE_ONCE(x, val))
+{
+  x = val
+}
+
+around: define(READ_ONCE(x))
+{
+  x
+}
+
+Page autoupdate is turned off
