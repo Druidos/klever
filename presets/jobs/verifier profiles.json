@@ -100,7 +100,13 @@
         {"-setprop": "CompositeCPA.cpas=cpa.location.LocationCPA,cpa.callstack.CallstackCPA,cpa.smg.SMGCPA"},
         {"-setprop": "parser.readLineDirectives=false"},
         {"-setprop": "cpa.smg.memcpyFunctions=__VERIFIER_memcpy"},
-        {"-setprop": "cpa.smg.memsetFunctions=__VERIFIER_memset"}
+        {"-setprop": "cpa.smg.memsetFunctions=__VERIFIER_memset"},
+        {"-setprop": "cpa.smg.memoryAllocationFunctions=malloc,__kmalloc,kmalloc,kzalloc,kzalloc_node,ldv_zalloc,ldv_malloc,ldv_color_devm_kmalloc,ldv_color_drm_kmalloc"},
+        {"-setprop": "cpa.smg.deallocationFunctions=free,kfree,kfree_const,ldv_color_devm_kfree,ldv_color_drm_kfree,ldv_color_drm_dev_kfree"},
+        {"-setprop": "cpa.smg.checkColorCompatibility=true"},
+        {"-setprop": "cpa.smg.checkColoredMemleak=true"},
+        {"-setprop": "cpa.smg.devmMemoryFunctions=ldv_color_devm_kmalloc,ldv_color_devm_kfree"},
+        {"-setprop": "cpa.smg.drmMemoryFunctions=ldv_color_drm_kmalloc,ldv_color_drm_kfree,ldv_color_drm_dev_kfree"}
       ]
     },
     "CPAchecker SMG memory checking with mea": {
