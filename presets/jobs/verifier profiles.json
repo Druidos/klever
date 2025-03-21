@@ -1,7 +1,7 @@
 {
   "CPAchecker common": {
     "name": "CPAchecker",
-    "version": "smg-master:d3436b02e6",
+    "version": "smg-master:702bc1a36f",
     "description": "Common options for the CPAchecker tool",
     "add options": [
       {"--option": "cpa.callstack.unsupportedFunctions=__VERIFIER_nonexisting_dummy_function"},
