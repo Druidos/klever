@@ -50,11 +50,18 @@ class BasicGenerationStrategy:
                          format(self.abstract_task_desc['id']))
         resource_limits = self._prepare_resource_limits()
         files = self._prepare_benchmark_description(resource_limits)
-        common.prepare_verification_task_files_archive(files)
         task_description = self._prepare_task_description(resource_limits)
-        self.logger.debug('Create verification task description file "task.json"')
-        with open('task.json', 'w', encoding='utf-8') as fp:
-            utils.json_dump(task_description, fp, self.conf['keep intermediate files'])
+
+        if task_description['upload verifier input files']:
+            # Prepare complete file archive to upload to Bridge
+            common.prepare_verification_task_files_archive(files)
+        else:
+            # Local deploy, do not need to send tasks through Bridge
+            task_description['task files'] = [os.path.abspath(file) for file in files]
+            # Tricky code, as Bridge requires sending an archive, so send a small one
+            common.prepare_verification_task_files_archive([files[0]])
+
+        return task_description
 
     def _prepare_benchmark_description(self, resource_limits):
         """
@@ -64,6 +71,7 @@ class BasicGenerationStrategy:
         :return: ElementTree.Element.
         """
         self.logger.debug("Prepare benchmark.xml file")
+        opts, safe_prps = common.get_verifier_opts_and_safe_prps(self.logger, resource_limits, self.conf)
         benchmark = ElementTree.Element("benchmark", {
             "tool": self.conf['verifier']['name'].lower()
         })
@@ -72,8 +80,6 @@ class BasicGenerationStrategy:
             if resource_limits.get("soft CPU time"):
                 benchmark.set('timelimit',
                               str(int(int(resource_limits["CPU time"]) * float(resource_limits["soft CPU time"]))))
-
-        opts, safe_prps = common.get_verifier_opts_and_safe_prps(self.logger, resource_limits, self.conf)
 
         # Then add options
         rundefinition = ElementTree.SubElement(benchmark, "rundefinition")

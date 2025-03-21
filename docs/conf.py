@@ -36,13 +36,13 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Klever'
-copyright = '2022, ISP RAS'
+copyright = '2025, ISP RAS'
 author = 'ISP RAS'
 
 # The short X.Y version
-version = '3.7'
+version = '4.0'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '4.0.1'
 
 
 # -- General configuration ---------------------------------------------------

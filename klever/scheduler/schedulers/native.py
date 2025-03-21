@@ -23,6 +23,7 @@ import re
 import shutil
 import signal
 import time
+import yaml
 
 from klever.scheduler import schedulers
 from klever.scheduler.schedulers import runners, resource_scheduler
@@ -74,7 +75,7 @@ class Native(runners.TryLessMemoryRunner):
 
         # Import job configuration prototype
         with open(self.conf["scheduler"]["job client configuration"], encoding="utf-8") as fh:
-            self._job_conf_prototype = json.loads(fh.read())
+            self._job_conf_prototype = yaml.safe_load(fh)
         # Try to get configuration just to be sure that it exists
         self._get_task_configuration()
 
@@ -309,6 +310,8 @@ class Native(runners.TryLessMemoryRunner):
             subdir = 'tasks'
             client_conf = self._get_task_configuration()
             self._manager.check_resources(configuration, job=False)
+            if 'task files' in configuration:
+                client_conf["task files"] = configuration['task files']
         else:
             subdir = 'jobs'
             client_conf = self._job_conf_prototype.copy()
@@ -591,7 +594,7 @@ class Native(runners.TryLessMemoryRunner):
         """
         name = self.conf["scheduler"]["task client configuration"]
         with open(name, encoding="utf-8") as fh:
-            data = json.loads(fh.read())
+            data = yaml.safe_load(fh)
 
         # Do checks
         if "client" not in data:
