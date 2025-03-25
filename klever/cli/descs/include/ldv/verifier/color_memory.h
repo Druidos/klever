@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef __LDV_LINUX_DEVICE_H
-#define __LDV_LINUX_DEVICE_H
+#ifndef __LDV_LINUX_COLOR_MEMORY_H
+#define __LDV_LINUX_COLOR_MEMORY_H
 
 #include <linux/types.h>
 
@@ -67,4 +67,4 @@ extern int ldv_drm_encoder_init(struct drm_device *dev, struct drm_encoder *enco
 extern int ldv_drm_simple_encoder_init(struct drm_device *dev, struct drm_encoder *encoder);
 
 extern int ldv_dev_err_probe(int err);
-#endif /* __LDV_LINUX_DEVICE_H */
+#endif /* __LDV_LINUX_COLOR_MEMORY_H */

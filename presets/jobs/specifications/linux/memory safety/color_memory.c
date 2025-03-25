@@ -21,7 +21,7 @@
 #include <ldv/linux/common.h>
 #include <ldv/linux/device.h>
 #include <ldv/linux/slab.h>
-#include <ldv/verifier/color memory.h>
+#include <ldv/verifier/color_memory.h>
 
 #include <linux/idr.h>
 #include <linux/workqueue.h>
