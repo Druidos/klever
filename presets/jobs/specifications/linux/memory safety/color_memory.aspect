@@ -19,6 +19,7 @@ before: file("$this")
 {
 #include <ldv/linux/device.h>
 #include <ldv/linux/list.h>
+#include <ldv/verifier/color_memory.h>
 }
 
 around: call(void *devm_kmalloc(struct device *dev, size_t size, gfp_t flags))

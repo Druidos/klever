@@ -210,7 +210,7 @@
               "linux/alloc/common.c",
               "linux/drivers/usb/core/usb/message.c",
               "linux/memory safety/memory.c",
-              "linux/memory safety/color memory.c"
+              "linux/memory safety/color_memory.c"
             ]
           }
         },
@@ -224,6 +224,7 @@
         {
           "name": "FVTP",
           "options": {
+            "merge source files": true,
             "verifier profile": "CPAchecker SMG color memory checking"
           }
         }
