@@ -20,10 +20,10 @@
 //заголовки из ядра (для функций)
 #include <linux/rcupdate.h>
 
-struct local_str{
+struct local_str {
 	int x;
 	struct rcu_head rcu;
-}
+};
 
 static void local_str_reclaim(struct rcu_head *head)
 {
@@ -34,8 +34,8 @@ static void local_str_reclaim(struct rcu_head *head)
 static int __init ldv_init(void)
 {
 	int x, y;
-	x = ldv_undef_int();
 	struct local_str *local_ptr;
+	x = ldv_undef_int();
 
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
 

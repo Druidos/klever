@@ -20,11 +20,11 @@
 #include <linux/rcupdate.h>
 #include <linux/rculist.h>
 
-struct local_str{
+struct local_str {
 	int x;
 	struct rcu_head rcu;
 	struct hlist_node node;
-}
+};
 
 static void local_str_reclaim(struct rcu_head *head)
 {
@@ -42,7 +42,7 @@ static int __init ldv_init(void)
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
 	local_ptr->x = x;
 
-	hlist_for_each_entry_rcu(key, info_head, node) {
+	hlist_for_each_entry_rcu(local_ptr, info_head, node) {
 		call_rcu(&local_ptr->rcu, local_str_reclaim);
 	}
 

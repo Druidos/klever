@@ -20,11 +20,11 @@
 #include <linux/rcupdate.h>
 #include <linux/list.h>
 
-struct local_str{
+struct local_str {
 	int x;
 	struct rcu_head rcu;
 	struct hlist_node node;
-}
+};
 
 static void local_str_reclaim(struct rcu_head *head)
 {
