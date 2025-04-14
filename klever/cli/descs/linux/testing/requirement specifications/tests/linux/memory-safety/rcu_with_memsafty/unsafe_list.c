@@ -44,18 +44,16 @@ static int __init ldv_init(void)
         return -1;
     local_ptr->x = x;
 	local_ptr->node.next = NULL;
-	local_ptr->node.pprev = NULL;
+	local_head->first = &(local_ptr->node);
+	local_ptr->node.pprev = &(local_head->first);
 
 	local_ptr_2 = ldv_malloc(sizeof(*local_ptr_2));
     if (!local_ptr_2)
         return -1;
 	local_ptr_2->x = ldv_undef_int();
 	local_ptr_2->node.next = NULL;
-	local_ptr_2->node.pprev = local_ptr;
-
-	local_ptr->node.next = local_ptr_2;
-
-	local_head = &(local_ptr->node);
+	local_ptr_2->node.pprev = &(local_ptr->node.next);
+	local_ptr->node.next = &(local_ptr_2->node);
 
 	hlist_for_each_entry_rcu(local_ptr, local_head, node) {
 		call_rcu(&local_ptr->rcu, local_str_reclaim);
