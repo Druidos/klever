@@ -41,7 +41,9 @@ static int __init ldv_init(void)
 	struct hlist_head *info_head = ldv_undef_ptr_non_null();
 
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
-	local_ptr->x = x;
+    if (!local_ptr)
+        return -1;
+    local_ptr->x = x;
 
 	hlist_for_each_entry_safe(local_ptr, next, info_head, node) {
 		call_rcu(&local_ptr->rcu, local_str_reclaim);

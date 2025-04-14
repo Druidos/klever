@@ -37,6 +37,8 @@ static int __init ldv_init(void)
 	x = ldv_undef_int();
 
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
+    if (!local_ptr)
+        return -1;
 
 	rcu_read_lock();
 	local_ptr->x = x;		//safe
