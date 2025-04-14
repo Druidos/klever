@@ -17,17 +17,17 @@
 
 before: file("$this")
 {
-	extern void ldv_call_rcu();
+	extern void ldv_call_rcu(struct rcu_head *head, rcu_callback_t func);
 	extern void ldv_rcu_read_lock(void);
 	extern void ldv_rcu_read_unlock(void);
 }
 
-around: call(void *call_rcu(struct rcu_head *head, rcu_callback_t func))
+around: call(void call_rcu(..))
 {
-	ldv_call_rcu(head, func);
+	ldv_call_rcu($arg1, $arg2);
 }
 
-around: call(static __always_inline void rcu_read_lock(void))
+around: call(static inline void rcu_read_lock(void))
 {
 	ldv_rcu_read_lock();
 }
