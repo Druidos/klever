@@ -41,16 +41,19 @@ static int __init ldv_init(void)
 	struct hlist_head *local_head;
 
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
-    if (!local_ptr)
+    if (!local_ptr){
         return -1;
+	}
     local_ptr->x = x;
 	local_ptr->node.next = NULL;
 	local_head->first = &(local_ptr->node);
 	local_ptr->node.pprev = &(local_head->first);
 
 	local_ptr_2 = ldv_malloc(sizeof(*local_ptr_2));
-    if (!local_ptr_2)
+    if (!local_ptr_2){
+		ldv_free(local_ptr);
         return -1;
+	}
 	local_ptr_2->x = ldv_undef_int();
 	local_ptr_2->node.next = NULL;
 	local_ptr_2->node.pprev = &(local_ptr->node.next);
