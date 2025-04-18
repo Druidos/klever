@@ -18,7 +18,7 @@
 before: file("$this")
 {
 	extern void ldv_call_rcu(struct rcu_head *head, rcu_callback_t func);
-	extern void ldv_kvfree_call_rcu(struct rcu_head *head, void *ptr)
+	extern void ldv_kvfree_call_rcu(struct rcu_head *head, void *ptr);
 	extern void ldv_rcu_read_lock(void);
 	extern void ldv_rcu_read_unlock(void);
 }

@@ -58,7 +58,7 @@ void ldv_rcu_read_unlock( void )
 		while(old_kfree_rcu_heads != NULL) {
 			curr_kfree_rcu_heads = old_kfree_rcu_heads;
 			old_kfree_rcu_heads = curr_kfree_rcu_heads->next;
-			ldv_free(ptr);
+			ldv_free(curr_kfree_rcu_heads->func);
 		}
 		ldv_kfree_rcu_callbacks_num = 0;
 	}
