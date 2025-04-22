@@ -21,6 +21,7 @@
 int ldv_rcu_counter = 0;
 int ldv_rcu_callbacks_num = 0;
 int ldv_kfree_rcu_callbacks_num = 0;
+void *ptr;
 
 // локальная структура-список узлов для осовбождения (call_rcu)
 struct rcu_head *old_rcu_heads;
@@ -83,9 +84,10 @@ void ldv_call_rcu(struct rcu_head *head, rcu_callback_t func)
 	}
 }
 
-void ldv_kvfree_call_rcu(struct rcu_head *head, void *ptr)
+void ldv_kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
 {
 	if (head) {
+		ptr = (void *) head - (unsigned long) func;
         if (ldv_rcu_counter)
         {
             if(ldv_kfree_rcu_callbacks_num == 0)
