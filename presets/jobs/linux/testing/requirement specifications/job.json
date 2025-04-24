@@ -144,7 +144,7 @@
     {
       "build base": "linux/testing/requirement specifications/memory-safety/rcu_with_memsafty",
       "targets": ["ext-modules/linux/memory-safety/rcu_with_memsafty"],
-      "requirement specifications": ["rcu with memsafty"]
+      "requirement specifications": ["test:rcu memory safety"]
     },
     {
       "targets": ["ext-modules/linux/drivers/base/class"],
