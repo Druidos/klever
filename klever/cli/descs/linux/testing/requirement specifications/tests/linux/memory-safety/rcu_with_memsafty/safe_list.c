@@ -38,7 +38,7 @@ static int __init ldv_init(void)
 	struct local_str *local_ptr;
 	struct local_str *local_ptr_2;
 	struct hlist_node *next;
-	struct hlist_head *local_head;
+	struct hlist_head local_head;
 
 	local_ptr = ldv_malloc(sizeof(*local_ptr));
     if (!local_ptr){
@@ -46,8 +46,8 @@ static int __init ldv_init(void)
 	}
     local_ptr->x = x;
 	local_ptr->node.next = NULL;
-	local_head->first = &(local_ptr->node);
-	local_ptr->node.pprev = &(local_head->first);
+	local_head.first = &(local_ptr->node);
+	local_ptr->node.pprev = &(local_head.first);
 
 	local_ptr_2 = ldv_malloc(sizeof(*local_ptr_2));
     if (!local_ptr_2){
@@ -59,7 +59,7 @@ static int __init ldv_init(void)
 	local_ptr_2->node.pprev = &(local_ptr->node.next);
 	local_ptr->node.next = &(local_ptr_2->node);
 
-	hlist_for_each_entry_safe(local_ptr, next, local_head, node) {
+	hlist_for_each_entry_safe(local_ptr, next, &local_head, node) {
 		call_rcu(&local_ptr->rcu, local_str_reclaim);
 	}
 
