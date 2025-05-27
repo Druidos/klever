@@ -1,0 +1,45 @@
+{
+  "3.14": {
+    "categories": {
+      "devattr": {
+        "callbacks": {
+          "init": {
+            "declaration": "int (*init)(%devattr.device%)"
+          },
+          "exit": {
+            "declaration": "void (*exit)(%devattr.device%)"
+          }
+        },
+        "containers": {
+          "device_attribute": {
+            "declaration": "struct pernet_operations a",
+            "fields": {
+              "init": "%devattr.init%",
+              "exit": "%devattr.exit%"
+            },
+            "header": "net/net_namespace.h"
+          }
+        },
+        "reference": true,
+        "resources": {
+          "device": {
+            "declaration": "struct net *a",
+            "header": "net/net_namespace.h"
+          }
+        }
+      }
+    },
+    "functions models": {
+      "register_pernet_device": {
+        "declaration": "int register_pernet_device(%devattr.device_attribute%)",
+        "header": "net/net_namespace.h",
+        "reference": true
+      },
+      "unregister_pernet_device": {
+        "declaration": "void unregister_pernet_device(%devattr.device_attribute%)",
+        "header": "net/net_namespace.h",
+        "reference": true
+      }
+    }
+  }
+}

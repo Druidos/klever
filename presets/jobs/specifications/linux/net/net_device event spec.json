@@ -1,0 +1,151 @@
+{
+  "3.14": {
+    "environment processes": {
+      "devattr_instance": {
+        "actions": {
+          "deregister": {
+            "condition": [
+              "%devattr% == $ARG1"
+            ],
+            "parameters": [
+              "%device%",
+              "%devattr%"
+            ]
+          },
+          "main": {
+            "comment": "Start init.",
+            "process": "[init].(<success>.[exit].(deregister) | <fail>.{main[1]})"
+          },
+          "register": {
+            "comment": "Register attribute callbacks.",
+            "parameters": [
+              "%device%",
+              "%devattr%"
+            ]
+          },
+          "init": {
+            "callback": "%devattr.init%",
+            "comment": "Call devattr init callback.",
+            "parameters": [
+              "%device%"
+            ],
+            "callback return value": "%ret%"
+          },
+          "exit": {
+            "callback": "%devattr.exit%",
+            "comment": "Call devattr exit callback.",
+            "parameters": [
+              "%device%"
+            ]
+          },
+          "fail": {
+            "comment": "Init failed."
+          },
+          "success": {
+            "comment": "Init success.",
+            "condition": [
+              "%ret% == 0"
+            ]
+          }
+        },
+        "comment": "Invoke attribute callbacks.",
+        "labels": {
+          "devattr": {
+            "container": true,
+            "interface": [
+              "devattr.device_attribute"
+            ],
+            "parameter": true
+          },
+          "device": {
+            "interface": [
+              "devattr.device"
+            ],
+            "parameter": true,
+            "resource": true
+          },
+          "ret": {
+            "declaration": "int a",
+            "value": "ldv_undef_int()"
+          }
+        },
+        "process": "(!register).<main>",
+        "reference": true
+      }
+    },
+    "functions models": {
+      "register_pernet_device": {
+        "actions": {
+          "assign": {
+            "comment": "Get attribute and device.",
+            "statements": [
+              "%devattr% = $ARG1;"
+            ]
+          },
+          "register": {
+            "comment": "Register attribute callbacks.",
+            "parameters": [
+              "%device%",
+              "%devattr%"
+            ]
+          }
+        },
+        "comment": "Register pernet device.",
+        "labels": {
+          "devattr": {
+            "container": true,
+            "interface": [
+              "devattr.device_attribute"
+            ],
+            "parameter": true
+          },
+          "device": {
+            "interface": [
+              "devattr.device"
+            ],
+            "parameter": true,
+            "resource": true
+          }
+        },
+        "process": "<assign>.[register]",
+        "reference": true
+      },
+      "unregister_pernet_device": {
+        "actions": {
+          "assign": {
+            "comment": "Get attribute and device.",
+            "statements": [
+              "%devattr% = $ARG1;"
+            ]
+          },
+          "deregister": {
+            "comment": "Deregister attribute callbacks.",
+            "parameters": [
+              "%device%",
+              "%devattr%"
+            ]
+          }
+        },
+        "comment": "Unregister pernet device.",
+        "labels": {
+          "devattr": {
+            "container": true,
+            "interface": [
+              "devattr.device_attribute"
+            ],
+            "parameter": true
+          },
+          "device": {
+            "interface": [
+              "devattr.device"
+            ],
+            "parameter": true,
+            "resource": true
+          }
+        },
+        "process": "<assign>.[deregister]",
+        "reference": true
+      }
+    }
+  }
+}
