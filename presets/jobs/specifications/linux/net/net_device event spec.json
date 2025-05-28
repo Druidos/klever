@@ -1,7 +1,7 @@
 {
   "3.14": {
     "environment processes": {
-      "devattr_instance": {
+      "net_device_instance": {
         "actions": {
           "deregister": {
             "condition": [
@@ -24,16 +24,16 @@
             ]
           },
           "init": {
-            "callback": "%devattr.init%",
-            "comment": "Call devattr init callback.",
+            "callback": "%net_device.init%",
+            "comment": "Call net_device init callback.",
             "parameters": [
               "%device%"
             ],
             "callback return value": "%ret%"
           },
           "exit": {
-            "callback": "%devattr.exit%",
-            "comment": "Call devattr exit callback.",
+            "callback": "%net_device.exit%",
+            "comment": "Call net_device exit callback.",
             "parameters": [
               "%device%"
             ]
@@ -53,13 +53,13 @@
           "devattr": {
             "container": true,
             "interface": [
-              "devattr.device_attribute"
+              "net_device.device_attribute"
             ],
             "parameter": true
           },
           "device": {
             "interface": [
-              "devattr.device"
+              "net_device.device"
             ],
             "parameter": true,
             "resource": true
@@ -95,13 +95,13 @@
           "devattr": {
             "container": true,
             "interface": [
-              "devattr.device_attribute"
+              "net_device.device_attribute"
             ],
             "parameter": true
           },
           "device": {
             "interface": [
-              "devattr.device"
+              "net_device.device"
             ],
             "parameter": true,
             "resource": true
@@ -131,13 +131,13 @@
           "devattr": {
             "container": true,
             "interface": [
-              "devattr.device_attribute"
+              "net_device.device_attribute"
             ],
             "parameter": true
           },
           "device": {
             "interface": [
-              "devattr.device"
+              "net_device.device"
             ],
             "parameter": true,
             "resource": true
