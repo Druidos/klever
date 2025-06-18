@@ -28,7 +28,7 @@ extern void *ldv_devm_kmalloc(struct device *dev, size_t size, gfp_t gfp);
 extern void *ldv_devm_kzalloc(struct device *dev, size_t size, gfp_t gfp);
 extern void *ldv_devm_kmalloc_array(struct device *dev, size_t n, size_t size, gfp_t flags);
 extern void *ldv_devm_kcalloc(struct device *dev, size_t n, size_t size, gfp_t flags);
-extern void ldv_devm_kfree(const void *p);
+extern void ldv_devm_kfree(struct device *dev, const void *p);
 
 extern int ldv_dev_err_probe(int err);
 #endif /* __LDV_LINUX_DEVICE_H */
