@@ -100,7 +100,7 @@ static int __init ldv_init(void)
 
 	encoder = devm_kzalloc(dev, sizeof(*encoder), GFP_KERNEL);
 	if (!encoder){
-		goto err_after_crtc;
+		goto err_after_drm;
 	}
 
 	drm_encoder_init(drm, encoder, &local_encoder_funcs,
