@@ -34,14 +34,18 @@ around: call(static inline void *devm_kzalloc(struct device *dev, size_t size, g
 
 around: call(static inline void *devm_kmalloc_array(struct device *dev, size_t n, size_t size, gfp_t flags))
 {
-	return ldv_devm_kmalloc_array(n, size, flags);
+	return ldv_devm_kmalloc_array(dev, n, size, flags);
 }
 
 around: call(static inline void *devm_kcalloc(struct device *dev, size_t n, size_t size, gfp_t flags))
 {
-	return ldv_devm_kcalloc(n, size, flags);
+	return ldv_devm_kcalloc(dev, n, size, flags);
 }
 
+around: call(void devm_kfree(struct device *dev, const void *p))
+{
+	ldv_devm_kfree(dev, p);
+}
 
 
 around: call(void *drmm_kmalloc(struct drm_device *dev, size_t size, gfp_t gfp))
@@ -135,7 +139,7 @@ around: call(void drm_dev_put(struct drm_device *dev))
 
 around: call(void *__devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver, size_t size, size_t offset))
 {
-	return __ldv_devm_drm_dev_alloc(parent, driver, size);
+	return __ldv_devm_drm_dev_alloc(parent, driver, size, offset);
 }
 
 around: call(static inline void dev_set_drvdata(struct device *dev, void *data))
