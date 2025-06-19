@@ -336,7 +336,7 @@ void *ldv_drmm_kmalloc(struct drm_device *dev, size_t size, gfp_t gfp)
 	if (!dr)
 		return NULL;
 
-	ldv_list_add(&dr->node.entry, &dev->managed.resources);
+	ldv_list_add(&dr->node.entry, &dev->managed.resources, dev->managed.resources.next);
 
 	return dr->data;
 }
@@ -350,7 +350,7 @@ void *ldv_drmm_kzalloc(struct drm_device *dev, size_t size, gfp_t gfp)
 	if (!dr)
 		return NULL;
 
-	ldv_list_add(&dr->node.entry, &dev->managed.resources);
+	ldv_list_add(&dr->node.entry, &dev->managed.resources, dev->managed.resources.next);
 
 	return dr->data;
 }
@@ -388,7 +388,7 @@ int __ldv_drmm_add_action(struct drm_device *dev,
 	if (!dr)
 		return -1;
 
-	ldv_list_add(&dr->node.entry, &dev->managed.resources);
+	ldv_list_add(&dr->node.entry, &dev->managed.resources, dev->managed.resources.next);
 
 	return 0;
 }
