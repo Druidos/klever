@@ -303,7 +303,7 @@ void ldv_devm_kfree(struct device *dev, const void *p)
 	}
 
 	if (dr_free) {
-		ldv_list_del_init(&dr_free->node.entry);
+		list_del_init(&dr_free->node.entry);
 		ldv_color_devm_kfree(dr_free);
 	}
 }
