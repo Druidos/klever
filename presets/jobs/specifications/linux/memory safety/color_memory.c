@@ -122,7 +122,7 @@ int ldv_drm_crtc_init_with_planes(struct drm_device *dev,
 	struct drm_mode_config *config = &dev->mode_config;
 	crtc->dev = dev;
 	crtc->funcs = funcs;
-	ldv_list_add_tail(&crtc->head, &config->crtc_list);
+	list_add_tail(&crtc->head, &config->crtc_list);
 	config->num_crtc++;
 	links->crtc = crtc;
 	return 0;
@@ -142,7 +142,7 @@ int ldv_drm_universal_plane_init(struct drm_device *dev,
 	struct drm_mode_config *config = &dev->mode_config;
 	plane->dev = dev;
 	plane->funcs = funcs;
-	ldv_list_add_tail(&plane->head, &config->plane_list);
+	list_add_tail(&plane->head, &config->plane_list);
 	config->num_total_plane++;
 	links->plane = plane;
 	return 0;
@@ -160,7 +160,7 @@ int ldv_drm_encoder_init(struct drm_device *dev, struct drm_encoder *encoder,
 {
 	encoder->dev = dev;
 	encoder->funcs = funcs;
-	ldv_list_add_tail(&encoder->head, &dev->mode_config.encoder_list);
+	list_add_tail(&encoder->head, &dev->mode_config.encoder_list);
 	dev->mode_config.num_encoder++;
 	links->encoder = encoder;
 	return 0;
@@ -226,7 +226,7 @@ struct devres * ldv_devm_alloc_dr(size_t size, gfp_t gfp, int flag)
 void ldv_devres_add(struct device *dev, struct devres *dr)
 {
 	struct devres_node *node = &dr->node;
-	ldv_list_add_tail(&node->entry, &dev->devres_head);
+	list_add_tail(&node->entry, &dev->devres_head);
 }
 
 void *ldv_devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
