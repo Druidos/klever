@@ -17,7 +17,7 @@
 
 #include <linux/types.h>
 #include <linux/device.h>
-#include <ldv/common/list.h>
+#include <ldv/linux/list.h>
 #include <ldv/linux/common.h>
 #include <ldv/linux/device.h>
 #include <ldv/linux/slab.h>
