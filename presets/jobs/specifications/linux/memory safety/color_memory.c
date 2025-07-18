@@ -22,6 +22,7 @@
 #include <ldv/linux/device.h>
 #include <ldv/linux/slab.h>
 #include <ldv/verifier/color_memory.h>
+#include <ldv/linux/err.h>
 
 #include <linux/idr.h>
 #include <linux/workqueue.h>
@@ -122,7 +123,7 @@ int ldv_drm_crtc_init_with_planes(struct drm_device *dev,
 	struct drm_mode_config *config = &dev->mode_config;
 	crtc->dev = dev;
 	crtc->funcs = funcs;
-	list_add_tail(&crtc->head, &config->crtc_list);
+	ldv_list_add(&crtc->head, config->crtc_list.prev, &config->crtc_list);
 	config->num_crtc++;
 	links->crtc = crtc;
 	return 0;
@@ -142,7 +143,7 @@ int ldv_drm_universal_plane_init(struct drm_device *dev,
 	struct drm_mode_config *config = &dev->mode_config;
 	plane->dev = dev;
 	plane->funcs = funcs;
-	list_add_tail(&plane->head, &config->plane_list);
+	ldv_list_add(&plane->head, config->plane_list.prev, &config->plane_list);
 	config->num_total_plane++;
 	links->plane = plane;
 	return 0;
@@ -160,7 +161,7 @@ int ldv_drm_encoder_init(struct drm_device *dev, struct drm_encoder *encoder,
 {
 	encoder->dev = dev;
 	encoder->funcs = funcs;
-	list_add_tail(&encoder->head, &dev->mode_config.encoder_list);
+	ldv_list_add(&encoder->head, dev->mode_config.encoder_list.prev, &dev->mode_config.encoder_list);
 	dev->mode_config.num_encoder++;
 	links->encoder = encoder;
 	return 0;
@@ -226,7 +227,7 @@ struct devres * ldv_devm_alloc_dr(size_t size, gfp_t gfp, int flag)
 void ldv_devres_add(struct device *dev, struct devres *dr)
 {
 	struct devres_node *node = &dr->node;
-	list_add_tail(&node->entry, &dev->devres_head);
+	ldv_list_add(&node->entry, dev->devres_head.prev, &dev->devres_head);
 }
 
 void *ldv_devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
@@ -485,6 +486,12 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 	ldv_drm_dev_init(dev, driver, parent);
 
 	ldv_drmm_add_final_kfree(dev, dev);
+
+	if (ldv_is_err(dev) {
+		ldv_drm_managed_release(dev);
+		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
+		ldv_color_drm_dev_kfree(links);
+	}
 
 	return dev;
 }
