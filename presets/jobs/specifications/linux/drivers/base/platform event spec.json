@@ -49,6 +49,8 @@
           "free": {
             "comment": "Free memory for 'platform_device' structure.",
             "statements": [
+              "if(%resource%->dev.driver_data) ldv_drm_dev_put(ldv_devres_dev_get_drvdata(&%resource%->dev));",
+              "ldv_devres_release_all(&%resource%->dev);",
               "$FREE(%resource%);"
             ]
           },
@@ -57,7 +59,8 @@
             "statements": [
               "$ALLOC(%resource%);",
               "%resource%->id_entry = & %container%->id_table[0];",
-              "%resource%->dev.platform_data = ldv_xmalloc_unknown_size();"
+              "%resource%->dev.platform_data = ldv_xmalloc_unknown_size();",
+              "%resource%->dev.driver_data = NULL;"
             ]
           },
           "main": {
