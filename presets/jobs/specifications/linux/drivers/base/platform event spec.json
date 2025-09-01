@@ -60,7 +60,8 @@
               "$ALLOC(%resource%);",
               "%resource%->id_entry = & %container%->id_table[0];",
               "%resource%->dev.platform_data = ldv_xmalloc_unknown_size();",
-              "%resource%->dev.driver_data = NULL;"
+              "%resource%->dev.driver_data = NULL;",
+              "%resource%->dev.devres_head.next = &(%resource%->dev.devres_head);"
             ]
           },
           "main": {
