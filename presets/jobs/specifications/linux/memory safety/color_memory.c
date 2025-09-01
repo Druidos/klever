@@ -487,7 +487,7 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 
 	ldv_drmm_add_final_kfree(dev, dev);
 
-	if (ldv_is_err(dev) {
+	if (ldv_is_err(dev)) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
 		ldv_color_drm_dev_kfree(links);
