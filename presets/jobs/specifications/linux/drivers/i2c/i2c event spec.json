@@ -8,7 +8,9 @@
             "statements": [
               "$ALLOC(%i2c_client%);",
               "%choice% = $SIZE(%ids%) ? ldv_undef_int_range(0, $SIZE(%ids%) - 2) : 0;",
-              "%i2c_id% = & %i2c_driver%->id_table[%choice%];"
+              "%i2c_id% = & %i2c_driver%->id_table[%choice%];",
+              "%i2c_client%->dev.driver_data = NULL;",
+              "%i2c_client%->dev.devres_head.next = &(%i2c_client%->dev.devres_head);"
             ]
           },
           "callback": {
@@ -34,6 +36,8 @@
           "free_device": {
             "comment": "Free allocated memory for i2c client.",
             "statements": [
+              "if(%i2c_client%->dev.driver_data) ldv_drm_dev_put(ldv_devres_dev_get_drvdata(&%i2c_client%->dev));",
+              "ldv_devres_release_all(&%i2c_client%->dev);",
               "$FREE(%i2c_client%);"
             ]
           },

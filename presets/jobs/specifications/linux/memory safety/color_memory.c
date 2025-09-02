@@ -42,11 +42,6 @@ extern void *ldv_color_drm_kmalloc(size_t size, gfp_t gfp);
 extern void ldv_color_drm_kfree(struct drmres *dr);
 extern void ldv_color_drm_dev_kfree(struct drm_device *dev);
 
-struct drm_links {
-	struct drm_plane *plane;
-	struct drm_crtc *crtc;
-	struct drm_encoder *encoder;
-} *links;
 
 struct drm_device *drm_dev;
 
@@ -125,7 +120,6 @@ int ldv_drm_crtc_init_with_planes(struct drm_device *dev,
 	crtc->funcs = funcs;
 	ldv_list_add(&crtc->head, config->crtc_list.prev, &config->crtc_list);
 	config->num_crtc++;
-	links->crtc = crtc;
 	return 0;
 }
 
@@ -145,7 +139,6 @@ int ldv_drm_universal_plane_init(struct drm_device *dev,
 	plane->funcs = funcs;
 	ldv_list_add(&plane->head, config->plane_list.prev, &config->plane_list);
 	config->num_total_plane++;
-	links->plane = plane;
 	return 0;
 }
 
@@ -163,7 +156,6 @@ int ldv_drm_encoder_init(struct drm_device *dev, struct drm_encoder *encoder,
 	encoder->funcs = funcs;
 	ldv_list_add(&encoder->head, dev->mode_config.encoder_list.prev, &dev->mode_config.encoder_list);
 	dev->mode_config.num_encoder++;
-	links->encoder = encoder;
 	return 0;
 }
 
@@ -479,8 +471,6 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 		return NULL;
 	drm_dev = dev;
 
-	links = ldv_color_drm_kmalloc(sizeof(*links), GFP_KERNEL);
-
 	ldv_devres_dev_set_drvdata(parent, dev);
 
 	ldv_drm_dev_init(dev, driver, parent);
@@ -490,7 +480,6 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 	if (ldv_is_err(dev)) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
-		ldv_color_drm_dev_kfree(links);
 	}
 
 	return dev;
@@ -503,7 +492,6 @@ static void ldv_drm_dev_release(struct kref *ref)
 	if(drm_dev) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
-		ldv_color_drm_dev_kfree(links);
 	}
 }
 
@@ -534,13 +522,18 @@ void *__ldv_devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver,
 	dev = container + offset;
 	drm_dev = dev;
 
-	links = ldv_color_drm_kmalloc(sizeof(*links), GFP_KERNEL);
 
+	if(parent->driver_data) ldv_drm_dev_put(ldv_devres_dev_get_drvdata(parent));
 	ldv_devres_dev_set_drvdata(parent, dev);
 
 	ldv_drm_dev_init(dev, driver, parent);
 
 	ldv_drmm_add_final_kfree(dev, container);
+
+	if (ldv_is_err(container)) {
+		ldv_drm_managed_release(dev);
+		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
+	}
 
 	return container;
 }
