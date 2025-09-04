@@ -25,6 +25,7 @@
 #include <drm/drm_encoder.h>
 #include <linux/platform_device.h>
 #include <linux/device.h>
+#include <ldv/linux/err.h>
 
 struct local_device{
 	u32 error_status;
@@ -68,7 +69,7 @@ static int __init ldv_init(void)
 	}
 
 	drm = drm_dev_alloc(&drv_driver, master);
-	if (!drm){
+	if (ldv_is_err(drm)){
 		goto err_after_master;
 	}
 	dev_set_drvdata(master, drm);

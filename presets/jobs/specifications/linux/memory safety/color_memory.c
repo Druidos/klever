@@ -468,7 +468,7 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 
 	dev = ldv_color_drm_kmalloc(sizeof(*dev), GFP_KERNEL);
 	if (!dev)
-		return NULL;
+		return ldv_err_ptr(ldv_undef_int_negative());
 	drm_dev = dev;
 
 	ldv_devres_dev_set_drvdata(parent, dev);
@@ -518,7 +518,7 @@ void *__ldv_devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver,
 
 	container = ldv_color_drm_kmalloc(size, GFP_KERNEL);
 	if (!container)
-		return NULL;
+		return ldv_err_ptr(ldv_undef_int_negative());
 	dev = container + offset;
 	drm_dev = dev;
 

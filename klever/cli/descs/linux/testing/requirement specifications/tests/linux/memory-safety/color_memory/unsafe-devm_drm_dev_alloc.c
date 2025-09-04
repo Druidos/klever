@@ -24,6 +24,7 @@
 #include <drm/drm_crtc.h>
 #include <drm/drm_encoder.h>
 #include <linux/platform_device.h>
+#include <ldv/linux/err.h>
 
 struct local_device{
 	struct drm_device drm;
@@ -67,7 +68,7 @@ static int __init ldv_init(void)
 	dev = &pdev->dev;
 
 	ldev = devm_drm_dev_alloc(dev, &drv_driver, struct local_device, drm);
-	if (!ldev){
+	if (ldv_is_err(ldev)){
 		goto err;
 	}
 
