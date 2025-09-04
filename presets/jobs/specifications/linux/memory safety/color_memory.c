@@ -480,6 +480,7 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 	if (ldv_is_err(dev)) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
+		parent->driver_data = NULL;
 	}
 
 	return dev;
@@ -492,6 +493,7 @@ static void ldv_drm_dev_release(struct kref *ref)
 	if(drm_dev) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
+		parent->driver_data = NULL;
 	}
 }
 
@@ -533,6 +535,7 @@ void *__ldv_devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver,
 	if (ldv_is_err(container)) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
+		parent->driver_data = NULL;
 	}
 
 	return container;
