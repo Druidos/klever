@@ -22,6 +22,7 @@
 #include <ldv/linux/device.h>
 #include <ldv/linux/slab.h>
 #include <ldv/verifier/color_memory.h>
+#include <ldv/verifier/nondet.h>
 #include <ldv/linux/err.h>
 
 #include <linux/idr.h>
