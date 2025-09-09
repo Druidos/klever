@@ -494,7 +494,7 @@ static void ldv_drm_dev_release(struct kref *ref)
 	if(drm_dev) {
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
-		parent->driver_data = NULL;
+		dev->dev.driver_data = NULL;
 	}
 }
 
