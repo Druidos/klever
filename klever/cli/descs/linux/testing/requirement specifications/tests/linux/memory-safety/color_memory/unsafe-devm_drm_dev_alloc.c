@@ -66,6 +66,7 @@ static int __init ldv_init(void)
 	}
 
 	dev = &pdev->dev;
+	dev->driver_data = NULL;
 
 	ldev = devm_drm_dev_alloc(dev, &drv_driver, struct local_device, drm);
 	if (ldv_is_err(ldev)){
