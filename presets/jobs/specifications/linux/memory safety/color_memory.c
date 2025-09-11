@@ -490,11 +490,13 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 static void ldv_drm_dev_release(struct kref *ref)
 {
 	struct drm_device *dev = container_of(ref, struct drm_device, ref);
+	struct device *parent;
 
 	if(drm_dev) {
+		parent = dev->dev;
 		ldv_drm_managed_release(dev);
 		ldv_color_drm_dev_kfree(dev->managed.final_kfree);
-		dev->dev->driver_data = NULL;
+		parent->driver_data = NULL;
 	}
 }
 
