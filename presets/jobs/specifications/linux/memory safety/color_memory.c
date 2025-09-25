@@ -24,6 +24,7 @@
 #include <ldv/verifier/color_memory.h>
 #include <ldv/verifier/nondet.h>
 #include <ldv/linux/err.h>
+#include <ldv/verifier/common.h>
 
 #include <linux/idr.h>
 #include <linux/workqueue.h>
@@ -71,6 +72,36 @@ struct drmres {
 	u8 data[];
 };
 
+unsigned int ldv_is_memory_alloc_failures = 1;
+
+void *ldv_color_drm_kmalloc_wrapper(size_t size, gfp_t gfp)
+{
+	void *res;
+
+	if (ldv_is_memory_alloc_failures && ldv_undef_int())
+		return NULL;
+
+	/* Always successful according to SV-COMP definition. */
+	res = ldv_color_drm_kmalloc(size, gfp);
+	ldv_assume(res != NULL);
+
+	return res;
+}
+
+void *ldv_color_devm_kmalloc_wrapper(size_t size, gfp_t gfp)
+{
+	void *res;
+
+	if (ldv_is_memory_alloc_failures && ldv_undef_int())
+		return NULL;
+
+	/* Always successful according to SV-COMP definition. */
+	res = ldv_color_devm_kmalloc(size, gfp);
+	ldv_assume(res != NULL);
+
+	return res;
+}
+
 int ldv_drmm_mode_config_init(struct drm_device *dev)
 {
 	INIT_LIST_HEAD(&dev->mode_config.crtc_list);
@@ -81,7 +112,10 @@ int ldv_drmm_mode_config_init(struct drm_device *dev)
 	dev->mode_config.num_encoder = 0;
 	dev->mode_config.num_total_plane = 0;
 
-	return 0;
+	if (ldv_is_memory_alloc_failures && ldv_undef_int())
+		return 12;
+	else
+		return 0;
 }
 
 void ldv_drm_mode_config_cleanup(struct drm_device *dev)
@@ -206,7 +240,7 @@ struct devres * ldv_devm_alloc_dr(size_t size, gfp_t gfp, int flag)
 {
 	struct devres *dr;
 
-	dr = ldv_color_devm_kmalloc(size + sizeof(struct devres), gfp);
+	dr = ldv_color_devm_kmalloc_wrapper(size + sizeof(struct devres), gfp);
 	if (!dr)
 		return NULL;
 
@@ -308,7 +342,7 @@ static struct drmres * ldv_drmm_alloc_dr(drmres_release_t release,
 {
 	struct drmres *dr;
 
-	dr = ldv_color_drm_kmalloc(size + sizeof(*dr), gfp);
+	dr = ldv_color_drm_kmalloc_wrapper(size + sizeof(*dr), gfp);
 	if (!dr)
 		return NULL;
 
@@ -466,15 +500,21 @@ struct drm_device *ldv_drm_dev_alloc(struct drm_driver *driver,
 									 struct device *parent)
 {
 	struct drm_device *dev;
+	int ret = 0;
 
-	dev = ldv_color_drm_kmalloc(sizeof(*dev), GFP_KERNEL);
+	dev = ldv_color_drm_kmalloc_wrapper(sizeof(*dev), GFP_KERNEL);
 	if (!dev)
-		return ldv_err_ptr(ldv_undef_int_negative());
+		return ldv_err_ptr(12);
 	drm_dev = dev;
 
 	ldv_devres_dev_set_drvdata(parent, dev);
 
-	ldv_drm_dev_init(dev, driver, parent);
+	ret = ldv_drm_dev_init(dev, driver, parent);
+	if (ret){
+		ldv_color_drm_dev_kfree(dev);
+		parent->driver_data = NULL;
+		return ldv_err_ptr(12);
+	}
 
 	ldv_drmm_add_final_kfree(dev, dev);
 
@@ -520,10 +560,11 @@ void *__ldv_devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver,
 {
 	void *container;
 	struct drm_device *dev;
+	int ret = 0;
 
-	container = ldv_color_drm_kmalloc(size, GFP_KERNEL);
+	container = ldv_color_drm_kmalloc_wrapper(size, GFP_KERNEL);
 	if (!container)
-		return ldv_err_ptr(ldv_undef_int_negative());
+		return ldv_err_ptr(12);
 	dev = container + offset;
 	drm_dev = dev;
 
@@ -531,7 +572,12 @@ void *__ldv_devm_drm_dev_alloc(struct device *parent, struct drm_driver *driver,
 	if(parent->driver_data) ldv_drm_dev_put(ldv_devres_dev_get_drvdata(parent));
 	ldv_devres_dev_set_drvdata(parent, dev);
 
-	ldv_drm_dev_init(dev, driver, parent);
+	ret = ldv_drm_dev_init(dev, driver, parent);
+	if (ret){
+		ldv_color_drm_dev_kfree(container);
+		parent->driver_data = NULL;
+		return ldv_err_ptr(12);
+	}
 
 	ldv_drmm_add_final_kfree(dev, container);
 
