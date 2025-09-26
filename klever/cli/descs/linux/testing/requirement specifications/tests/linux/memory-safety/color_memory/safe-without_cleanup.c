@@ -64,6 +64,8 @@ static int __init ldv_init(void)
 	}
 
 	dev = &pdev->dev;
+	dev->driver_data = NULL;
+	dev->devres_head.next = &dev->devres_head;
 
 	drm = drm_dev_alloc(&drv_driver, dev);
 	if (ldv_is_err(drm)){
@@ -110,6 +112,7 @@ static int __init ldv_init(void)
 
 // destroying
 	drm_dev_put(drm);
+	ldv_devres_release_all(dev);
 	ldv_free(pdev);
 
 	return 0;
@@ -119,6 +122,7 @@ err_after_drm:
 	drm_dev_put(drm);
 
 err_after_pdev:
+	ldv_devres_release_all(dev);
 	ldv_free(pdev);
 
 	return -1;

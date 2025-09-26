@@ -62,6 +62,8 @@ static int __init ldv_init(void)
         return -1;
 	}
 	dev = &pdev->dev;
+	dev->driver_data = NULL;
+	dev->devres_head.next = &dev->devres_head;
 
 	master = ldv_malloc(sizeof(*master));
 	if (!master){
@@ -88,7 +90,8 @@ static int __init ldv_init(void)
 
 
 // destroying
-	drm_dev_put(drm);
+	if(dev->driver_data) drm_dev_put(drm);
+	ldv_devres_release_all(dev);
 	ldv_free(master);
 	ldv_free(pdev);
 
@@ -101,6 +104,7 @@ err_after_master:
 	ldv_free(master);
 
 err_after_pdev:
+	ldv_devres_release_all(dev);
 	ldv_free(pdev);
 
 	return -1;
